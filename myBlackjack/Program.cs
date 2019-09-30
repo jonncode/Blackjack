@@ -6,16 +6,18 @@ namespace Blackjack
     {
         static int playerCards = 0;
         static int dealerCards = 0;
-        static bool gameOver = false;
         static Random randomInt = new Random();
         static bool playerNotDone = true;
+        static bool dealerNotDone = true;
+        static bool gameOver = false;
 
         static void Main(string[] args)
         {
             intializeGame();
-            while (gameOver == false)
+            playerDeal();
+            if (gameOver != true)
             {
-                playerDeal();
+                dealerDeal();
             }
             Console.ReadKey();
         }
@@ -40,39 +42,37 @@ namespace Blackjack
                     Console.WriteLine("You pulled a {0}, you now have {1}", newCard, playerCards);
                     if(playerCards > 21)
                     {
+                        playerNotDone = false;
                         gameOver = true;
                         Console.WriteLine("You lost, sorry!");
-                        break;
                     }
                 }
                 else
                 {
                     playerNotDone = true;
-                    dealerDeal();
+                    break;
                 }
             }
-
-
         }
 
         private static void dealerDeal()
         {
-            bool playerNotDone = true;
-            while (playerNotDone == true)
+            dealerNotDone = true;
+            while (dealerNotDone == true)
             {
                 if (dealerCards == playerCards)
                 {
                     Console.WriteLine("Tie!");
-                    playerNotDone = false;
+                    dealerNotDone = false;
                 }
-                if (dealerCards == 21 && playerCards != 21)
+                else if (dealerCards == 21 && playerCards != 21)
                 {
                     Console.WriteLine("Blackjack! Dealer won");
                 }
                 else if (dealerCards > 21)
                 {
                     Console.WriteLine("You won!");
-                    playerNotDone = false;
+                    dealerNotDone = false;
                 }
                 else if (dealerCards < playerCards)
                 {
@@ -84,15 +84,10 @@ namespace Blackjack
                 else if (dealerCards > playerCards)
                 {
                     Console.WriteLine("Dealer won!");
-                    playerNotDone = false;
+                    dealerNotDone = false;
                 }
-                else
-                {
-
-                }
-                gameOver = true;
             }
-            }
+        }
     }
 }
 
