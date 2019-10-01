@@ -1,8 +1,8 @@
-namespace Blackjack
+﻿namespace Blackjack
 {
-    static class Player
+    class Player
     {
-        public string Name { get; set; }
-        public int playerCards {get; set;} 
+        static string Name;
+        static int playerCards;
     }
 }
