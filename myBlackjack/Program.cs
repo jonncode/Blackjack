@@ -8,9 +8,10 @@ namespace Blackjack
 {
     class Program
     {
-        List<Player> players = new List<Player>();
-        static int dealerCards = 0;
+        static List<Player> players = new List<Player>();
         static Random randomInt = new Random();
+        static int dealerCards = 0;
+        static int maxNum = 0;
         static bool playerNotDone = true;
         static bool dealerNotDone = true;
         static bool gameOver = false;
@@ -31,51 +32,78 @@ namespace Blackjack
             {
                 Console.WriteLine("Lägg till spelare?");
                 Console.WriteLine("1: Ja");
-                Console.WriteLine("2: Ja");
+                Console.WriteLine("2: Nej");
                 Console.Write("");
                 int choice = int.Parse(Console.ReadLine());
-                switch(choice)
+                switch (choice)
                 {
                     case 1:
                         Console.Write("Name: ");
                         string name = Console.ReadLine();
-                        Player player = new Player()
-                        {
-                            "Name": 
-                        };
+                        Player currentPlayer = new Player();
+                        currentPlayer.Name = name;
+                        players.Add(currentPlayer);
+                        break;
+                    case 2:
+                        playerNotDone = false;
                         break;
                 }
             }
+
             for (int i = 0; i < 2; i++)
             {
-                playerCards += randomInt.Next(1, 10);
+                dealerCards += randomInt.Next(1, 10);
 
             }
-            Console.WriteLine(playerCards);
+            Console.WriteLine("");
+            Console.WriteLine("Datorns poäng: {0}", dealerCards);
+            foreach (Player p in players)
+            {
+                for (int i = 0; i < 2; i++)
+                {
+                    p.playerCards += randomInt.Next(1, 11);
+
+                }
+                Console.WriteLine("{0} Din poäng: {1}", p.Name, p.playerCards);
+            }
+            Console.WriteLine("");
+
         }
         static void playerDeal()
         {
-            while (playerNotDone == true) {
-                Console.Write("Vill du ta ett nytt kort? (Ja)");
-                string prompt = Console.ReadLine();
-                if(prompt.ToLower() == "ja")
+            int i = 0;
+            foreach (Player p in players)
+            {
+                Console.WriteLine("Playing as player {0}", p.Name);
+                playerNotDone = true;
+                while (playerNotDone == true)
                 {
-                    int newCard = randomInt.Next(1, 10);
-                    playerCards += newCard;
-                    Console.WriteLine("You pulled a {0}, you now have {1}", newCard, playerCards);
-                    if(playerCards > 21)
+                    Console.Write("Vill du ta ett nytt kort? (Ja)");
+                    string prompt = Console.ReadLine();
+                    if (prompt.ToLower() == "ja")
+                    {
+
+                        int newCard = randomInt.Next(1, 11);
+                        p.playerCards += newCard;
+
+                        Console.WriteLine("Du drog en {0}, du har nu {1} poäng", newCard, p.playerCards);
+                        Console.WriteLine("Datorns poäng: {0}", dealerCards);
+                        if (p.playerCards > 21)
+                        {
+                            p.playerCards = -1;
+                            Console.WriteLine("You lost, sorry!");
+                            playerNotDone = false;
+                        }
+                    }
+                    else
                     {
                         playerNotDone = false;
-                        gameOver = true;
-                        Console.WriteLine("You lost, sorry!");
+                        break;
                     }
                 }
-                else
-                {
-                    playerNotDone = true;
-                    break;
-                }
+                i++;
             }
+            maxNum = players.Max(player => player.playerCards);
         }
 
         private static void dealerDeal()
@@ -83,12 +111,12 @@ namespace Blackjack
             dealerNotDone = true;
             while (dealerNotDone == true)
             {
-                if (dealerCards == playerCards)
+                if (dealerCards == maxNum)
                 {
                     Console.WriteLine("Tie!");
                     dealerNotDone = false;
                 }
-                else if (dealerCards == 21 && playerCards != 21)
+                else if (dealerCards == 21 && maxNum != 21)
                 {
                     Console.WriteLine("Blackjack! Dealer won");
                 }
@@ -97,14 +125,14 @@ namespace Blackjack
                     Console.WriteLine("You won!");
                     dealerNotDone = false;
                 }
-                else if (dealerCards < playerCards)
+                else if (dealerCards < maxNum)
                 {
-                    int newCard = randomInt.Next(1, 10);
+                    int newCard = randomInt.Next(1, 11);
                     dealerCards += newCard;
                     Console.WriteLine("Dealer pulls a {0}, they now have {1}", newCard, dealerCards);
 
                 }
-                else if (dealerCards > playerCards)
+                else if (dealerCards > maxNum)
                 {
                     Console.WriteLine("Dealer won!");
                     dealerNotDone = false;
