@@ -31,7 +31,7 @@ namespace Blackjack
             {
                 Console.WriteLine("Lägg till spelare?");
                 Console.WriteLine("1: Ja");
-                Console.WriteLine("2: Ja");
+                Console.WriteLine("2: Nej");
                 Console.Write("");
                 int choice = int.Parse(Console.ReadLine());
                 switch(choice)
@@ -39,23 +39,27 @@ namespace Blackjack
                     case 1:
                         Console.Write("Name: ");
                         string name = Console.ReadLine();
-                        Player player = new Player()
-                        {
-                            "Name": 
-                        };
+                        Player player = new Player();
+                        player.Name = name;
+                        players.Add(player);
+                        break;
+                    case 2:
                         break;
                 }
             }
-            for (int i = 0; i < 2; i++)
-            {
-                playerCards += randomInt.Next(1, 10);
+            foreach(Player p in players) {
+                for (int i = 0; i < 2; i++)
+                {
+                    p.playerCards += randomInt.Next(1, 10);
 
+                }
             }
             Console.WriteLine(playerCards);
         }
         static void playerDeal()
         {
-            while (playerNotDone == true) {
+            foreach(Player p in players) {
+                while (playerNotDone == true) {
                 Console.Write("Vill du ta ett nytt kort? (Ja)");
                 string prompt = Console.ReadLine();
                 if(prompt.ToLower() == "ja")
@@ -75,20 +79,28 @@ namespace Blackjack
                     playerNotDone = true;
                     break;
                 }
+}
+
             }
         }
 
         private static void dealerDeal()
         {
+            int highestNum = 0;
+            foreach(Player p in players) 
+            {
+                int highestNum = p.Max();
+            }
+            foreach(Player p in players) {
             dealerNotDone = true;
             while (dealerNotDone == true)
             {
-                if (dealerCards == playerCards)
+                if (dealerCards == p.playerCards)
                 {
                     Console.WriteLine("Tie!");
                     dealerNotDone = false;
                 }
-                else if (dealerCards == 21 && playerCards != 21)
+                else if (dealerCards == 21 && p.playerCards != 21)
                 {
                     Console.WriteLine("Blackjack! Dealer won");
                 }
@@ -97,18 +109,19 @@ namespace Blackjack
                     Console.WriteLine("You won!");
                     dealerNotDone = false;
                 }
-                else if (dealerCards < playerCards)
+                else if (dealerCards < p.playerCards)
                 {
                     int newCard = randomInt.Next(1, 10);
                     dealerCards += newCard;
                     Console.WriteLine("Dealer pulls a {0}, they now have {1}", newCard, dealerCards);
 
                 }
-                else if (dealerCards > playerCards)
+                else if (dealerCards > p.playerCards)
                 {
                     Console.WriteLine("Dealer won!");
                     dealerNotDone = false;
                 }
+            }
             }
         }
     }
