@@ -1,10 +1,14 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace Blackjack
 {
     class Program
     {
-        static int playerCards = 0;
+        List<Player> players = new List<Player>();
         static int dealerCards = 0;
         static Random randomInt = new Random();
         static bool playerNotDone = true;
@@ -23,6 +27,25 @@ namespace Blackjack
         }
         static void intializeGame()
         {
+            while (playerNotDone == true)
+            {
+                Console.WriteLine("Lägg till spelare?");
+                Console.WriteLine("1: Ja");
+                Console.WriteLine("2: Ja");
+                Console.Write("");
+                int choice = int.Parse(Console.ReadLine());
+                switch(choice)
+                {
+                    case 1:
+                        Console.Write("Name: ");
+                        string name = Console.ReadLine();
+                        Player player = new Player()
+                        {
+                            "Name": 
+                        };
+                        break;
+                }
+            }
             for (int i = 0; i < 2; i++)
             {
                 playerCards += randomInt.Next(1, 10);
