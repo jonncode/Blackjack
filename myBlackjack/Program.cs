@@ -66,6 +66,7 @@ namespace Blackjack
         /// </summary>
         static void IntializeGame()
         {
+
             while (playerNotDone == true)
             {
                 Console.WriteLine("");
@@ -150,11 +151,10 @@ namespace Blackjack
                             p.playerCards += newCard;
                             Console.WriteLine("Du drog en {0}, du har nu {1} poäng", newCard, p.playerCards);
                             Console.WriteLine("Datorns poäng: {0}", dealerCards);
-                            if (p.playerCards > 21)
+                            if (p.playerCards > 21) //If player exceeds over 21, automatically lose and reset int for maxNum.
                             {
                                 p.playerCards = -1;
                                 Console.WriteLine("You lost, sorry!");
-                                Console.WriteLine("");
                                 playerNotDone = false;
                             }
                             break;
@@ -165,7 +165,9 @@ namespace Blackjack
                 }
                 i++;
             }
-            maxNum = players.Max(player => player.playerCards);
+            //Player in list with highest sum of number from cards
+            //Players who have lost have negative int, thus won't interfere with dealer's decisions.
+            maxNum = players.Max(player => player.playerCards); 
         }
         /// <summary>
         /// Dealer tries to surpass/tie with player that had highest number not over 21.
@@ -207,6 +209,9 @@ namespace Blackjack
                     dealerNotDone = false;
                 }
             }
+            Console.WriteLine("Press any key to continue");
+            Console.ReadKey();
+            Console.WriteLine("");
         }
     }
 }
