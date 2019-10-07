@@ -13,7 +13,7 @@ namespace Blackjack
         static int dealerCards = 0; //Sum of all of dealer's cards 
         static int maxNum = 0; // Highest number out of all players not over 21.
         static int selectedMenuInput = 0; //input for switch case.
-        static bool playerNotDone = true;
+        static bool playerNotDone = true; //If current player is done playing (during menu or in game)
         static bool dealerNotDone = true;
         static bool gameOver = false;
         static bool exitGame = false;
@@ -74,9 +74,10 @@ namespace Blackjack
                 Console.WriteLine("1: Ja");
                 Console.WriteLine("2: Nej");
                 Console.Write("Skriv ditt alternativ: ");
-                bool choice = int.TryParse(Console.ReadLine(), out selectedMenuInput);
-                while (!choice)
+                bool choice = int.TryParse(Console.ReadLine(), out selectedMenuInput); //Save input to variable selectedMenuInput
+                while (!choice) //if tryParse fails.
                 {
+                    //Continue asking for input
                     Console.WriteLine("Felaktigt svar!");
                     Console.Write("Skriv ditt alternativ: ");
                     choice = int.TryParse(Console.ReadLine(), out selectedMenuInput);
@@ -86,34 +87,34 @@ namespace Blackjack
                     case 1:
                         Console.Write("Name: ");
                         string name = Console.ReadLine();
-                        Player currentPlayer = new Player(); 
-                        currentPlayer.Name = name;
-                        players.Add(currentPlayer);
+                        Player currentPlayer = new Player(); //Initialize instance player using construction Player();
+                        currentPlayer.Name = name; //Add name to instance
+                        players.Add(currentPlayer); //Add instance to list of player objects.
                         break;
                     case 2:
-                        playerNotDone = false;
+                        playerNotDone = false; //Players are ready.
                         break;
                     default:
                         Console.WriteLine("Felaktigt svar, försök igen!");
                         break;
                 }
             }
-
+            //Add two cards to dealer.
             for (int i = 0; i < 2; i++)
             {
                 dealerCards += randomInt.Next(1, 11);
 
             }
             Console.WriteLine("");
-            Console.WriteLine("Datorns poäng: {0}", dealerCards);
-            foreach (Player p in players)
+            Console.WriteLine("Datorns poäng: {0}", dealerCards); //Display dealer's sum from cards.
+            foreach (Player p in players) //Add 2 cards to every player object in list.
             {
                 for (int i = 0; i < 2; i++)
                 {
                     p.playerCards += randomInt.Next(1, 11);
 
                 }
-                Console.WriteLine("[{0}] Poäng: {1}", p.Name, p.playerCards);
+                Console.WriteLine("[{0}] Poäng: {1}", p.Name, p.playerCards); //Output each player's total sum from cards.
             }
 
         }
@@ -125,20 +126,20 @@ namespace Blackjack
         static void playerDeal()
         {
             int i = 0;
-            foreach (Player p in players)
+            foreach (Player p in players) //Loop through list of players.
             {
                 Console.WriteLine("");
                 Console.WriteLine("Playing as player {0}", p.Name);
                 playerNotDone = true;
-                while (playerNotDone == true)
+                while (playerNotDone == true) //While player is not done.
                 {
                     Console.WriteLine("");
                     Console.WriteLine("Vill du ta ett nytt kort?");
                     Console.WriteLine("1: Ja");
                     Console.WriteLine("2: Nej");
                     Console.Write("Skriv ditt alternativ: ");
-                    bool choice = int.TryParse(Console.ReadLine(), out selectedMenuInput);
-                    while(!choice)
+                    bool choice = int.TryParse(Console.ReadLine(), out selectedMenuInput); //Save input into int selectedMenuInput
+                    while(!choice) //If tryParse fails
                     {
                         Console.WriteLine("Felaktigt svar!");
                         Console.Write("Skriv ditt alternativ: ");
@@ -147,15 +148,15 @@ namespace Blackjack
                     switch(selectedMenuInput)
                     {
                         case 1:
-                            int newCard = randomInt.Next(1, 11);
-                            p.playerCards += newCard;
-                            Console.WriteLine("Du drog en {0}, du har nu {1} poäng", newCard, p.playerCards);
-                            Console.WriteLine("Datorns poäng: {0}", dealerCards);
+                            int newCard = randomInt.Next(1, 11); //generate new card to player.
+                            p.playerCards += newCard; //Add card to player.
+                            Console.WriteLine("Du drog en {0}, du har nu {1} poäng", newCard, p.playerCards); //output total points for player.
+                            Console.WriteLine("Datorns poäng: {0}", dealerCards); 
                             if (p.playerCards > 21) //If player exceeds over 21, automatically lose and reset int for maxNum.
                             {
-                                p.playerCards = -1;
+                                p.playerCards = -1; //Set player cards to -1 to avoid interference with maxNum.
                                 Console.WriteLine("You lost, sorry!");
-                                playerNotDone = false;
+                                playerNotDone = false; //Player is done
                             }
                             break;
                         case 2:
@@ -179,31 +180,31 @@ namespace Blackjack
         private static void dealerDeal()
         {
             dealerNotDone = true;
-            while (dealerNotDone == true)
+            while (dealerNotDone == true) //While player has not won/lost.
             {
                 Console.WriteLine("");
-                if (dealerCards == maxNum)
+                if (dealerCards == maxNum) //If dealer's number is the same as highest number.
                 {
                     Console.WriteLine("Tie!");
                     dealerNotDone = false;
                 }
-                else if (dealerCards == 21 && maxNum != 21)
+                else if (dealerCards == 21 && maxNum != 21) //If dealer gets blackjack meanwhile nobody else has blackjack.
                 {
                     Console.WriteLine("Blackjack! Dealer won");
                 }
-                else if (dealerCards > 21)
+                else if (dealerCards > 21) //If dealer goes over 21.
                 {
                     Console.WriteLine("Remaining players win!");
                     dealerNotDone = false;
                 }
-                else if (dealerCards < maxNum)
+                else if (dealerCards < maxNum) //If dealer is still under maxNum.
                 {
-                    int newCard = randomInt.Next(1, 11);
-                    dealerCards += newCard;
+                    int newCard = randomInt.Next(1, 11); //Deal new card to dealer.
+                    dealerCards += newCard; //Add card to dealer.
                     Console.WriteLine("Dealer pulls a {0}, they now have {1}", newCard, dealerCards);
 
                 }
-                else if (dealerCards > maxNum)
+                else if (dealerCards > maxNum) //IF dealer's cards is over maxNum.
                 {
                     Console.WriteLine("Dealer won!");
                     dealerNotDone = false;
